@@ -728,7 +728,8 @@ async function loadCandidatesFromSupabase(){
       cmt:row.score_comprometimento||0,
       fit:row.score_fit||0,
       inf:row.score_infraestrutura||0,
-      dom:row.perfil_fit||'I'
+      dom:row.perfil_fit||'I',
+      disc:(function(dom){const d={D:0,I:0,S:0,C:0};if(d[dom]!==undefined)d[dom]=4;return d;})(row.perfil_fit||'I')
     },
     answers:{
       nome:row.nome||'',
@@ -1079,7 +1080,8 @@ function buildDetailHTML(c){
   const vtitle=sc.total>=75?'Alta prioridade — chamar para entrevista':sc.total>=55?'Avaliar na entrevista por vídeo':'Abaixo do perfil mínimo neste momento';
   const vtxt=sc.total>=75?'As respostas indicam alinhamento com as exigências da vaga, postura comercial adequada e comprometimento real. Recomendamos avançar para a reunião por vídeo.':sc.total>=55?'Há elementos positivos, mas algumas áreas precisam de verificação na entrevista.':'As respostas indicam que o candidato ainda não atende os requisitos desta vaga.';
 
-  const discPct={D:Math.round(sc.disc.D/4*100),I:Math.round(sc.disc.I/4*100),S:Math.round(sc.disc.S/4*100),C:Math.round(sc.disc.C/4*100)};
+  const discSafe=sc.disc||{D:0,I:0,S:0,C:0};
+  const discPct={D:Math.round(discSafe.D/4*100),I:Math.round(discSafe.I/4*100),S:Math.round(discSafe.S/4*100),C:Math.round(discSafe.C/4*100)};
   const fitTraits=[
     {l:'Orientação a resultado',k:'D',c:'#4A9EE8'},
     {l:'Influência e energia social',k:'I',c:'#D85A30'},
